@@ -1,6 +1,12 @@
 server {
     listen 80;
-    server_name ${DOMAIN} www.${DOMAIN};
+    server_name www.${DOMAIN};
+    rewrite ^(.*) http://${DOMAIN}$1 permanent;
+}
+
+server {
+    listen 80;
+    server_name ${DOMAIN};
 
     location /.well-known/acme-challenge/ {
         root /vol/www/;
@@ -10,21 +16,6 @@ server {
         return 301 https://${DOMAIN};
     }
 }
-
-server {
-    listen 80;
-    server_name www.gregcompton.com;
-
-    location /.well-known/acme-challenge/ {
-        root /vol/www/;
-    }
-
-    location / {
-        return 301 https://gregcompton.com;
-    }
-}
-
-
 
 server {
     listen      443 ssl;
