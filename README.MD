@@ -93,6 +93,10 @@ The first time the database service is started (**and every time it is rebuilt**
 
 	sudo docker compose -f docker-compose.deploy.yml run --rm app sh -c "python manage.py createsuperuser"
 
+*Note: During the previous step, if you did bring up the service in the background, you will need to either* 
+- *stop the service (ctrl-c) OR*
+- *open a new terminal instance*
+
 ## Step 6: Verify everything is working properly
 - Go to https://yourdomain.com and you should see the home page.
 - Now go to https://youdomain.com/admin and login using the superuser credentials created earlier.

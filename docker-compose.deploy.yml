@@ -28,6 +28,7 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
+      - DOMAIN=${DOMAIN}
     depends_on:
       - redis
       - db
@@ -46,6 +47,7 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
+      - DOMAIN=${DOMAIN}
     depends_on:
       - redis
       - db
