@@ -98,8 +98,11 @@ The first time the database service is started (**and every time it is rebuilt**
 - *open a new terminal instance*
 
 ## Step 6: Verify everything is working properly
+#### Test the base Djano installation
 - Go to https://yourdomain.com and you should see the home page.
-- Now go to https://youdomain.com/admin and login using the superuser credentials created earlier.
+
+#### Test the database
+- Go to https://youdomain.com/admin and login using the superuser credentials created earlier.
 - Go to the Samples model, upload a file, save, then click the file link to verify that static files are being handled properly
 
 ## Step 7: Make changes to the app once it is deployed
