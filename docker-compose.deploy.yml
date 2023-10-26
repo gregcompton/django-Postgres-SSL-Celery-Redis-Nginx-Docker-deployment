@@ -1,6 +1,20 @@
 version: "3.9"
 
 services:
+
+  redis:
+    image: redis:7.0.11-alpine
+
+  db:
+    image: postgres:13-alpine
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+
   app:
     build:
       context: .
@@ -15,17 +29,27 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
     depends_on:
+      - redis
       - db
 
-  db:
-    image: postgres:13-alpine
+  celery:
     restart: always
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
+    container_name: celery2
+    build:
+      context: .
+    command: celery --app=app worker -l INFO
+    image: celery:django
     environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASS}
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DJANGO_ALLOWED_HOSTS=${DOMAIN}
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+    depends_on:
+      - redis
+      - db
+      - app
 
   proxy:
     build:
