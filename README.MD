@@ -1,14 +1,14 @@
 The goal of this project is to develop a comprehensive project template that includes:
 - [x] Deployment to a server using Docker containers (completed) :heavy_check_mark:
-- [x] SSL (completed) :heavy_check_mark:
+- [x] SSL (completed...with "www" issue. See note in Step 6) :heavy_check_mark:
   - [ ] Automate certificate renewal (todo: see 
 ["Handling Renewals"](https://londonappdeveloper.com/django-docker-deployment-with-https-using-letsencrypt/)
 at the bottom of the page)
 - [x] All deploy settings set via environmental variables (completed) :heavy_check_mark:
 - [x] Django with a Hello World home page (completed) :heavy_check_mark:
 - [x] Postgres database (completed) :heavy_check_mark:
-- [ ] Celery (up next)
-- [ ] Redis(up next)
+- [x] Celery (completed) :heavy_check_mark:
+- [x] Redis (completed) :heavy_check_mark:
 
 This project template can be cloned from github as a baseline and easily extended to create private projects
 
