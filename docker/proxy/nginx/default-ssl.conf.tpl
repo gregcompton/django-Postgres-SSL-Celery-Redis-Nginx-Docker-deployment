@@ -7,7 +7,16 @@ server {
     }
 
     location / {
-        return 301 https://$host$request_uri;
+        return 301 https://${DOMAIN}$request_uri;
+    }
+}
+
+server {
+    listen      443 ssl;
+    server_name www.${DOMAIN};
+
+    location / {
+        return 301 https://${DOMAIN}$request_uri;
     }
 }
 
