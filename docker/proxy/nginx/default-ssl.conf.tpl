@@ -1,7 +1,7 @@
 server {
     listen 80;
     server_name www.${DOMAIN};
-    rewrite ^(.*) http://${DOMAIN}$1 permanent;
+    rewrite ^(.*) http://${DOMAIN} permanent;
 }
 
 server {

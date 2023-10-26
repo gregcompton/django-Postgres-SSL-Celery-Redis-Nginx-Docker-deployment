@@ -101,6 +101,11 @@ The first time the database service is started (**and every time it is rebuilt**
 #### Test the base Djano installation
 - Go to https://yourdomain.com and you should see the home page.
 
+*Note: There is a know issue where http://www.yourdomain.com may get an error. This is due to needing a wildcard 
+certification. I tried addressing the error by redirecting/rewriting requests, but it doesn't work for me. Ultimately,
+I decided to create a DNS CNAME record redirecting all www traffic to yourdomain.com. The code from my attempts are still
+in app/docker/proxy/nginx/default-ssl.conf.tpl if you want to take a look*
+
 #### Test the database
 - Go to https://youdomain.com/admin and login using the superuser credentials created earlier.
 - Go to the Samples model, upload a file, save, then click the file link to verify that static files are being handled properly
