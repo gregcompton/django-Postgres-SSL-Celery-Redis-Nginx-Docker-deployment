@@ -1,6 +1,17 @@
 version: '3.9'
 
 services:
+
+  redis:
+    image: redis:7.0.11-alpine
+
+  db:
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_DB=devdb
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=changeme
+
   app:
     build:
       context: .
@@ -20,11 +31,26 @@ services:
       - DB_PASS=changeme
 
     depends_on:
+      - redis
       - db
 
-  db:
-    image: postgres:13-alpine
+  celery:
+    restart: always
+    container_name: celery2
+    build:
+      context: .
+    command: celery --app=app worker -l INFO
+    volumes:
+      - ./app:/app
+    image: celery:django
     environment:
-      - POSTGRES_DB=devdb
-      - POSTGRES_USER=devuser
-      - POSTGRES_PASSWORD=changeme
+      - DJANGO_SECRET_KEY=mysecretkey
+      - DJANGO_DEBUG=1
+      - DB_HOST=db
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASS=changeme
+    depends_on:
+      - redis
+      - db
+      - app

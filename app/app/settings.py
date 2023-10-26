@@ -129,4 +129,7 @@ STATIC_ROOT = '/vol/web/static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CSRF_TRUSTED_ORIGINS = ["https://gregcompton.com", "https://www.gregcompton.com"]
+CSRF_TRUSTED_ORIGINS = [f'https://{os.environ.get("DOMAIN")}', f'https://www.{os.environ.get("DOMAIN")}']
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND", "redis://redis:6379/0")
