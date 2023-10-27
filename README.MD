@@ -63,8 +63,9 @@ Note: I am using linode nameservers and deploying to a Linode server, so the pro
 - Edit the `.env` file and change settings per the project needs  
 
         sudo nano .env
-  - ALLOWED_HOSTS = yourdomain.com,www.yourdomain.com,<any other subdomains> 
+  - ALLOWED_HOSTS = yourdomain.com,www.yourdomain.com, *any other subdomains* 
     - *Note: All of the ALLOWED_HOSTS should also be included on the ssl certificate. See Step 4b*
+    - If you add additional subdomains, you will need to figure out how to handle them in the Django app.
   - SECRET KEY = a jumble of characters. Use keygen for production
   - DOMAIN = yourdomain.com
   - ACME EMAIL = your email address
@@ -72,7 +73,8 @@ Note: I am using linode nameservers and deploying to a Linode server, so the pro
 
   *Note: "ctrl+x" then "y" to save or "n" exit without saving*
 
-*Note: ALLOWED_HOSTS*
+*Note: ALLOWED_HOSTS and DOMAIN are used in similar ways. If your deployment is only for yourdomain.com 
+and www.yourdomain.com, the deploy.yml and djano settings can be refactored to simplify things*
 
 ## Step 4b (optional): Customization
 
@@ -81,14 +83,14 @@ Note: I am using linode nameservers and deploying to a Linode server, so the pro
   - If you have anything other than yourdomain.com and www.yourdomain.com in ALLOWED_HOSTS, it might be worth looking 
   into refactoring `-d "$DOMAIN" -d www."$DOMAIN" \` to `-d "$ALLOWED_HOSTS"` in order to keep all settings in `.env`
   - See [certbot documentation](https://eff-certbot.readthedocs.io/en/stable/using.html#deleting-certificates) to learn more.
-  - 
+
 
 - You might also want to change the default home page as it has my info.
 
-	sudo nano app/home/templates/home/index.html
+	```sudo nano app/home/templates/home/index.html```
 
 ## Step 5: Get the first certificate
-This process can take a while...up to a minute in my experience
+This process can take a while the first time...up to 2 minutes in my experience.
 
 	docker compose -f docker-compose.deploy.yml run --rm certbot /opt/certify-init.sh
 
@@ -105,33 +107,40 @@ The first time the database service is started (**and every time it is rebuilt**
 
 	sudo docker compose -f docker-compose.deploy.yml run --rm app sh -c "python manage.py createsuperuser"
 
-*Note: During the previous step, if you did bring up the service in the background, you will need to either* 
+*Note: During the previous step, if you did not bring up the service in the background, you will need to either* 
 - *stop the service (ctrl-c) OR*
 - *open a new terminal instance*
 
 ## Step 6: Verify everything is working properly
-#### Test the base Djano installation
-- Go to https://yourdomain.com and you should see the home page.
-
-*Note: There is a know issue where http://www.yourdomain.com may get an error. This is due to needing a wildcard 
-certification. I tried addressing the error by redirecting/rewriting requests, but it doesn't work for me. Ultimately,
-I decided to create a DNS CNAME record redirecting all www traffic to yourdomain.com. The code from my attempts are still
-in app/docker/proxy/nginx/default-ssl.conf.tpl if you want to take a look*
+#### Test the proxy and base Django installation
+- You should see the home page at each of the following
+  - http://www.yourdomain.com
+  - http://yourdomain.com
+  - https://www.yourdomain.com
+  - https://yourdomain.com
+  - any other domains or subdomains that you registered as ALLOWED_HOSTS *AND* on with certbot
 
 #### Test the database
 - Go to https://youdomain.com/admin and login using the superuser credentials created earlier.
 - Go to the Samples model, upload a file, save, then click the file link to verify that static files are being handled properly
 
 #### Verify Celery tasks are registered
-Scroll back through the terminal history after you run - `sudo docker compose -f docker-compose.deploy.yml up` 
-You should see three lines from celery 
+Scroll back through the terminal history. You should see three lines from celery.
 ```
 [tasks]
   . app.celery.test_app_task
   . home.tasks.test_shared_task
 ```
 
-This means celery is working
+This means celery is working.
+
+You may need to restart the services if the messages have been deleted from the terminal buffer.
+
+`sudo docker compose -f docker-compose.deploy.yml down`
+
+then
+
+`sudo docker compose -f docker-compose.deploy.yml up`
 
 ## Step 7: Make changes to the app once it is deployed
 The whole idea is to use this as a quickstart jumping off point to start developing an app/website/whatever. 
