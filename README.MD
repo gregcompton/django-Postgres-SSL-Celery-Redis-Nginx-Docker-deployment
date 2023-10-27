@@ -86,8 +86,8 @@ and www.yourdomain.com, the deploy.yml and djano settings can be refactored to s
 
 
 - You might also want to change the default home page as it has my info.
-
-	```sudo nano app/home/templates/home/index.html```
+        
+        sudo nano app/home/templates/home/index.html
 
 ## Step 5: Get the first certificate
 This process can take a while the first time...up to 2 minutes in my experience.
@@ -95,9 +95,16 @@ This process can take a while the first time...up to 2 minutes in my experience.
 	docker compose -f docker-compose.deploy.yml run --rm certbot /opt/certify-init.sh
 
 ### STOP then START the service so that the application is served via https
-- `sudo docker compose -f docker-compose.deploy.yml down`
-- `sudo docker compose -f docker-compose.deploy.yml up`
-  - OR `sudo docker compose -f docker-compose.deploy.yml up -d`  # Add -d to run in the background
+      sudo docker compose -f docker-compose.deploy.yml down
+
+then
+
+    sudo docker compose -f docker-compose.deploy.yml up
+
+or add -d to run in the background
+
+    sudo docker compose -f docker-compose.deploy.yml up -d  
+
 
 
   *Note: I like to run services in the foreground until I am sure that they are working*
@@ -136,20 +143,27 @@ This means celery is working.
 
 You may need to restart the services if the messages have been deleted from the terminal buffer.
 
-`sudo docker compose -f docker-compose.deploy.yml down`
+      sudo docker compose -f docker-compose.deploy.yml down
 
 then
 
-`sudo docker compose -f docker-compose.deploy.yml up`
+    sudo docker compose -f docker-compose.deploy.yml up
+
 
 ## Step 7: Make changes to the app once it is deployed
 The whole idea is to use this as a quickstart jumping off point to start developing an app/website/whatever. 
 So, as you edit the project, run these commands to update only the app service without bringing down the proxy or 
 database services
 
-- `sudo docker compose -f docker-compose.deploy.yml build app`
-- `sudo docker compose -f docker-compose.deploy.yml up --no-deps app` 
-  - OR `sudo docker compose -f docker-compose.deploy.yml up --no-deps -d app`    # Add -d to run in the background
+        sudo docker compose -f docker-compose.deploy.yml build app
+
+then
+
+        sudo docker compose -f docker-compose.deploy.yml up --no-deps app 
+
+or add -d to run in the background
+
+        sudo docker compose -f docker-compose.deploy.yml up --no-deps -d app`
 
 ## Step 8: Setup cronjob to automate certificate renewal
 *todo: see 
