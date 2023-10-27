@@ -14,6 +14,7 @@ done
 
 echo "Getting certificate..."
 
+# Use -d to include additional domains on the cert. Don't forget 'www' or portal."DOMAIN"
 certbot certonly \
     --webroot \
     --webroot-path "/vol/www/" \

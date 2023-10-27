@@ -63,6 +63,8 @@ Note: I am using linode nameservers and deploying to a Linode server, so the pro
 - Edit the `.env` file and change settings per the project needs  
 
         sudo nano .env
+  - ALLOWED_HOSTS = yourdomain.com,www.yourdomain.com,<any other subdomains> 
+    - *Note: All of the ALLOWED_HOSTS should also be included on the ssl certificate. See Step 4b*
   - SECRET KEY = a jumble of characters. Use keygen for production
   - DOMAIN = yourdomain.com
   - ACME EMAIL = your email address
@@ -70,8 +72,18 @@ Note: I am using linode nameservers and deploying to a Linode server, so the pro
 
   *Note: "ctrl+x" then "y" to save or "n" exit without saving*
 
-## Step 4b (optional): Put your info on the home page
-You might want to change the default home page as it has my info.
+*Note: ALLOWED_HOSTS*
+
+## Step 4b (optional): Customization
+
+- **IMPORTANT**: In app/docker/certbot/certify-init.sh add any additional domains/subdomains that need to be served. 
+  - Keep in mind that www.youdomain.com and domain.com are DIFFERENT DOMAINS. 
+  - If you have anything other than yourdomain.com and www.yourdomain.com in ALLOWED_HOSTS, it might be worth looking 
+  into refactoring `-d "$DOMAIN" -d www."$DOMAIN" \` to `-d "$ALLOWED_HOSTS"` in order to keep all settings in `.env`
+  - See [certbot documentation](https://eff-certbot.readthedocs.io/en/stable/using.html#deleting-certificates) to learn more.
+  - 
+
+- You might also want to change the default home page as it has my info.
 
 	sudo nano app/home/templates/home/index.html
 
@@ -110,23 +122,16 @@ in app/docker/proxy/nginx/default-ssl.conf.tpl if you want to take a look*
 - Go to https://youdomain.com/admin and login using the superuser credentials created earlier.
 - Go to the Samples model, upload a file, save, then click the file link to verify that static files are being handled properly
 
-#### Test Celery
-- Open terminal inside the container
+#### Verify Celery tasks are registered
+Scroll back through the terminal history after you run - `sudo docker compose -f docker-compose.deploy.yml up` 
+You should see three lines from celery 
+```
+[tasks]
+  . app.celery.test_app_task
+  . home.tasks.test_shared_task
+```
 
-    	docker exec -it django-postgres-ssl-celery-redis-nginx-docker-deployment-app-1 /bin/sh
-
-- Open a python shell in the container
-
-        ./manage.py shell
-
-- Open a second terminal window to monitor the celery process
-## TBD: review VERY ACADEMY Tutorial to get commands to view celery processes
-		
-- import a test task
-
-        >>  from home.tasks import test_shared_task
-        >>  test_shared_task.delay()
-Check the celery process to verify that the task was received and executed
+This means celery is working
 
 ## Step 7: Make changes to the app once it is deployed
 The whole idea is to use this as a quickstart jumping off point to start developing an app/website/whatever. 
