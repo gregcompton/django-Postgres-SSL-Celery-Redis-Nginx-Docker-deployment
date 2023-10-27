@@ -110,6 +110,24 @@ in app/docker/proxy/nginx/default-ssl.conf.tpl if you want to take a look*
 - Go to https://youdomain.com/admin and login using the superuser credentials created earlier.
 - Go to the Samples model, upload a file, save, then click the file link to verify that static files are being handled properly
 
+#### Test Celery
+- Open terminal inside the container
+
+    	docker exec -it django-postgres-ssl-celery-redis-nginx-docker-deployment-app-1 /bin/sh
+
+- Open a python shell in the container
+
+        ./manage.py shell
+
+- Open a second terminal window to monitor the celery process
+## TBD: review VERY ACADEMY Tutorial to get commands to view celery processes
+		
+- import a test task
+
+        >>  from home.tasks import test_shared_task
+        >>  test_shared_task.delay()
+Check the celery process to verify that the task was received and executed
+
 ## Step 7: Make changes to the app once it is deployed
 The whole idea is to use this as a quickstart jumping off point to start developing an app/website/whatever. 
 So, as you edit the project, run these commands to update only the app service without bringing down the proxy or 
