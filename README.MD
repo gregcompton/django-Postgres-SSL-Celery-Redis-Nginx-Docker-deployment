@@ -33,7 +33,7 @@ As of 10/23/23 I am using a Linode Ubuntu 22.04 LTS jammy server and [gregcompto
 # HOW TO DEPLOY THIS REPOSITORY
 
 For better instructions, go to the "Create a Server" section of the [London App Developer 
-Tutorial](https://anvilproject.org/guides/content/creating-links#creating-links-in-markdown) and follow the instructions.
+Tutorial](https://londonappdeveloper.com/django-docker-deployment-with-https-using-letsencrypt/) and follow the instructions.
 
 Requirements
 - domain: e.g. gregcompton.com
